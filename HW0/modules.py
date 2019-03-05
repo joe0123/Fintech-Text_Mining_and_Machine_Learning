@@ -79,13 +79,13 @@ def news_containing_keywords(keywords, news_list):
     return news
 
 def get_coshow(contents):
-    coshow_dict = {} ### the frequency of the words
+    coshow_dict = {}  #: value means the frequency of the word(key)
     cat_content = ' '.join(contents)
     clean_content = remove_punctuation(cat_content)
-    cut_content = jieba.lcut(clean_content)  ### break string into words
+    cut_content = jieba.lcut(clean_content) 
     cut_content = list(filter(lambda x: x!=' ', cut_content))
     for i in range(len(cut_content)-1):
-        wcw = cut_content[i] + cut_content[i+1] ### try to create new words, minimizing the mistakes of jieba
+        wcw = cut_content[i] + cut_content[i+1] #: try to create new words
     #     print(wcw)
         try:
             coshow_dict[wcw] = coshow_dict[wcw] + 1
@@ -102,7 +102,7 @@ def get_cutted_dict(list_of_news):
     return lcut_to_dict(cutted)
 
 def first_n_words(cutted_dict, n, word_len=2, to=1000):
-    sdbv = sort_dict_by_values(cutted_dict)
+    sdbv = sort_dict_by_values(cutted_dictkey)
     return list(filter(lambda x: len(x[0])>=word_len and len(x[0])<=to, sdbv))[:n]
 
 def get_wordcloud_of_keywords(keywords, list_of_news, image_path=False):

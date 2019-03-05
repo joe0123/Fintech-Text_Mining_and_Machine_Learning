@@ -1,2 +1,2 @@
-My comments in .ipynb and .py files are followed by "###".
+My comments in .ipynb and .py files are followed by "#: ".
 
