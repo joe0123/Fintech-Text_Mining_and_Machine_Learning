@@ -134,6 +134,7 @@ def get_wordcloud_of_keywords(keywords, list_of_news, image_path=False):
     return im
 
 def merge_one_day_news_dict(one_day_dict, count='wt', divide = 1):
+    #: all unique words in one day
     all_words = set([word for each_dict in one_day_dict for word in each_dict])
     one_day_wf = {}
     for word in all_words:

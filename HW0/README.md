@@ -1,2 +1,1 @@
-My comments in .ipynb and .py files are followed by "#: ".
-
+My comments in final_report.ipynb(from In[1] to IN[26]) and module.py files are followed by "#: ".
