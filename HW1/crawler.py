@@ -30,7 +30,6 @@ for etf in ETFs:
         print("\"https://www.etf.com/" + etf + "\"", "is not found")
         continue
     if r.status_code != req.codes.ok:
-        print("a")
         continue
     #handle html code with BeautifulSoup
     soup = bs(r.text, 'html.parser')
@@ -41,7 +40,7 @@ for etf in ETFs:
     try:
         r = req.get(homepage)
     except:
-        print("\""+homepage+"\"", "is not found")
+        print("\"" + homepage + "\"", "is not found")
         continue
     if r.status_code != req.codes.ok:
         continue
