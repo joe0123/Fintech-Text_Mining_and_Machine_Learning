@@ -7,25 +7,20 @@ import urllib.request as url
 from selenium import webdriver
 import time
 
-#initialization for requests
-headers = 'Googlebot/2.1 (+http://www.google.com/bot.html)'
 #initialization for webdriver (downloaded file with original name will be stored in ./tmp)
 options = webdriver.ChromeOptions()
 prefs = {'profile.default_content_settings.popups': 0, 'download.default_directory': os.getcwd() + '\\tmp'}
 options.add_experimental_option('prefs', prefs)
-options.add_argument("user-agent={}".format(headers))
+options.add_argument("user-agent={}".format('Googlebot/2.1 (+http://www.google.com/bot.html)'))
 
 #wait# convert xls to csv (module "xlrd" should be installed beforehand)
     #data_xls = pd.read_excel(filename)
     #data_xls.to_csv(filename - "xls" + "csv", encoding='utf-8', index=False)
     #os.remove(filename)
 
-def html_code(url, case):
+def html_code(url):
     try:
-        if case == 0:
-            r = requests.get(url)
-        else:
-            r = requests.get(url, headers=headers)
+        r = requests.get(url)
     except:
         print("\"" + url + "\"", "is not found")
         return "FAIL" 
@@ -53,7 +48,7 @@ def re_name(new_fn):
 
 def fast_dl(homepage, head, key, target, filename):
     #loading point
-    soup = html_code(homepage, 0)
+    soup = html_code(homepage)
     if soup == "FAIL":
         return
     ldp = head + soup.find("a", string=key).get(target)
