@@ -78,7 +78,7 @@ df = pd.read_csv(sys.argv[1])
 ETFs = df["Symbol"].values
 #reference# https://developer.mozilla.org/zh-TW/docs/Web/HTTP/Headers/User-Agent
 
-#file download will be stored in ./download
+#files downloaded will be stored in ./download
 os.mkdir("download")
 
 for etf in ETFs:
