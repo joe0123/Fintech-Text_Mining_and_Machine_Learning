@@ -78,7 +78,7 @@ os.mkdir("download")
 
 for etf in ETFs:
 #Find url of Homepage
-    soup = html_code("https://www.etf.com/" + etf, 0)
+    soup = html_code("https://www.etf.com/" + etf)
     if soup == "FAIL":
         continue
     homepage = soup.find("a", string="Fund Home Page").get("href")
