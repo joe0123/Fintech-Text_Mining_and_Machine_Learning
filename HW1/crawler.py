@@ -8,11 +8,12 @@ from selenium import webdriver
 import time
 
 #initialization for requests
-headers = {'user-agent':'Googlebot/2.1 (+http://www.google.com/bot.html)'}
+headers = 'Googlebot/2.1 (+http://www.google.com/bot.html)'
 #initialization for webdriver (downloaded file with original name will be stored in ./tmp)
 options = webdriver.ChromeOptions()
 prefs = {'profile.default_content_settings.popups': 0, 'download.default_directory': os.getcwd() + '\\tmp'}
 options.add_experimental_option('prefs', prefs)
+options.add_argument("user-agent={}".format(headers))
 
 #wait# convert xls to csv (module "xlrd" should be installed beforehand)
     #data_xls = pd.read_excel(filename)
@@ -50,43 +51,26 @@ def re_name(new_fn):
     os.rename("./tmp/" + old_fn[0], "./download/" + new_fn)
     os.rmdir("./tmp")
 
-def ishares_dl(homepage, filename):
+def fast_dl(homepage, head, key, target, filename):
     #loading point
     soup = html_code(homepage, 0)
     if soup == "FAIL":
         return
-    ldp = "https://www.ishares.com" + soup.find("a", string="Download").get("href")
+    ldp = head + soup.find("a", string=key).get(target)
+    if homepage == "www.pimcoetfs.com":
+        ldp = ldp.replace("amp;", "")
     download(ldp, filename)
 
-def proshares_dl(homepage, filename):
-    soup = html_code(homepage, 0)
-    if soup == "FAIL":
-        return
-    ldp = soup.find("a", string="NAV History").get("href")
-    download(ldp, filename)
-
-def spdr_dl(homepage, filename):
-    soup = html_code(homepage, 1)
-    if soup == "FAIL":
-        return
-    ldps = soup.find_all("div", class_="related-info")
-    ldp = ""
-    for i in ldps:
-        if i.getText().find("Most Recent NAV / NAV History") != -1:
-            ldp = "https://us.spdrs.com" + i.a["href"]
-            break
-    download(ldp, filename)
-    
-def invesco_dl(homepage, etf):
+def slow_dl(homepage, key, filename):
     driver = webdriver.Chrome(chrome_options=options)
     driver.get(homepage)
-    driver.find_element_by_link_text("Historical NAVs").click()
+    try:
+        driver.find_element_by_link_text(key).click()
+    except:
+        print("Downloading", "\"" + key + "\"", "in", "\"" + homepage + "\"", "fails")
     time.sleep(3)
     driver.close()
-    re_name(etf + ".csv")
-    #DEBUG# print(etf + ".csv", "downloaded")
-
-
+    re_name(filename)
 
 
 df = pd.read_csv(sys.argv[1])
@@ -108,13 +92,19 @@ for etf in ETFs:
     #the url of ETF's family (like iShares, SPDR...)
     family = homepage.split('/')[2]
     if family == "www.ishares.com":
-        ishares_dl(homepage, etf + ".xls")
+        fast_dl(homepage, "https://" + family, "Download", "href", etf + ".xls")
     elif family == "www.proshares.com":
-        proshares_dl(homepage, etf + ".csv")
+        fast_dl(homepage, "", "NAV History", "href",etf + ".csv")
     elif family == "us.spdrs.com":
-        spdr_dl(homepage, etf + ".xls")
+        slow_dl(homepage, "Most Recent NAV / NAV History XLS", etf + ".xls")
     elif family == "www.invesco.com":
-        invesco_dl(homepage, etf)
+        slow_dl(homepage, "Historical NAVs", etf + ".csv")
+    elif family == "www.pimcoetfs.com":
+        fast_dl(homepage, "http://" + family, "NAV History Download", "href", etf + ".xls")
+    elif family == "www.wisdomtree.com":
+        fast_dl(homepage, "", "View NAV and Premium/Discount History", "data-href" ,etf + ".txt")   #html code will be downloaded
+    elif family == "dws.com":
+        slow_dl(homepage, "NAV History (CSV)", etf + ".csv")
     else:
         continue
         
