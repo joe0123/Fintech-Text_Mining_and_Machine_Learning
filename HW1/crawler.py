@@ -20,7 +20,7 @@ def html_code(url):
     except:
         print("\"" + url + "\"", "is not found")
         return "FAIL" 
-    assert r.status_code != requests.codes.ok
+    assert r.status_code == requests.codes.ok
     #handle html code with BeautifulSoup
     soup = bs(r.text, 'html.parser')
     return soup 
@@ -59,7 +59,7 @@ def sele_dl(homepage, key, value, filename):
     
     #file to be renamed was stored in ./tmp
     old_fn = os.listdir("./tmp")
-    os.rename("./tmp/" + old_fn[0], "./download/" + new_fn)
+    os.rename("./tmp/" + old_fn[0], "./download/" + filename)
     os.rmdir("./tmp")
 
 
