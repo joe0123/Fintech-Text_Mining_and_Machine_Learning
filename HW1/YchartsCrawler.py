@@ -7,10 +7,15 @@ class YchartsCrawler(object):
 	def __init__(self):
 		login_url = 'https://ycharts.com/login'
 		self.s=requests.Session()
+		
+		'''
+		get the evil csrftoken
+		'''
 		r = self.s.get(login_url)
 		#print(r.text)
 		tree = html.fromstring(r.content)
 		csrftoken = tree.xpath('//input[@name="csrfmiddlewaretoken"]/@value')[0]
+		
 		header = {
 			'Accept': 'text/html,application/xhtml+xml,application/xml;q=0.9,image/webp,image/apng,*/*;q=0.8',
 			'Accept-Encoding': 'gzip, deflate, br',
@@ -25,18 +30,19 @@ class YchartsCrawler(object):
 			'Origin': 'https://ycharts.com',
 			'Referer': 'https://ycharts.com/login',
 			'Upgrade-Insecure-Requests': '1',
-			'User - Agent': 'Mozilla / 5.0(Windows NT 10.0; Win64; x64) AppleWebKit / 537.36(KHTML, like Gecko) Chrome / 72.0 .3626 .121 Safari / 537.36'
+			'User - Agent': 'Mozilla / 5.0(Windows NT 10.0; Win64; x64) AppleWebKit / 537.36(KHTML, like Gecko) Chrome / 72.0 .3626 .121 Safari / 537.36' 
 		}
+		#the username and password is very weird because I create the account with temporary email
 		payload = {'username': 'dayipoxice@mail-pro.info', 'password': 'seqpBGisd3bdNqH', 'csrfmiddlewaretoken': csrftoken,'next':'','partner':'None','partner_username':'None'}
 		r = self.s.post(login_url, data=payload, headers=header)
-		assert (r.status_code != '200')
-	
-	def getETF(self, etf_name, start_date='12/31/2015', end_date='12/31/2018'):
+		assert r.status_code != '200'
+
+	def get_etf_nav(self, etf_name, start_date='12/31/2015', end_date='12/31/2018'):
 		nav=dict()
 		last_page_num=int(self.s.get('https://ycharts.com/companies/' + etf_name + '/net_asset_value.json', params={'endDate': end_date, 'pageNum': '1', 'startDate': start_date}).json()['last_page_num'])
 		for i in range(1,last_page_num+1):
 			r = self.s.get('https://ycharts.com/companies/' + etf_name + '/net_asset_value.json', params={'endDate': end_date, 'pageNum': str(i), 'startDate': start_date})
-			assert (r.status_code != '200')
+			assert r.status_code != '200'
 			
 			table = dict(r.json())['data_table_html']
 			soup = bs(table, 'html.parser')
@@ -53,7 +59,7 @@ class YchartsCrawler(object):
 		
 def main():
 	crawler=YchartsCrawler()
-	hyld = crawler.getETF('HYLD')
+	hyld = crawler.get_etf_nav('HYLD')
 	print(hyld)
 
 if __name__ == "__main__":
