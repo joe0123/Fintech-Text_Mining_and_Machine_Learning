@@ -12,6 +12,7 @@ options = webdriver.ChromeOptions()
 prefs = {'profile.default_content_settings.popups': 0, 'download.default_directory': os.getcwd() + '\\tmp'}
 options.add_experimental_option('prefs', prefs)
 options.add_argument("user-agent={}".format('Googlebot/2.1 (+http://www.google.com/bot.html)'))
+driver = webdriver.Chrome(chrome_options=options)
 
 #wait# convert xls to csv (module "xlrd" should be installed beforehand)
     #data_xls = pd.read_excel(filename)
@@ -46,25 +47,26 @@ def re_name(new_fn):
     os.rename("./tmp/" + old_fn[0], "./download/" + new_fn)
     os.rmdir("./tmp")
 
-def fast_dl(homepage, head, key, target, filename):
+def fast_dl(homepage, head, value, target, filename):
     #loading point
     soup = html_code(homepage)
     if soup == "FAIL":
         return
-    ldp = head + soup.find("a", string=key).get(target)
+    ldp = head + soup.find("a", string=value).get(target)
     if homepage == "www.pimcoetfs.com":
         ldp = ldp.replace("amp;", "")
     download(ldp, filename)
 
-def slow_dl(homepage, key, filename):
-    driver = webdriver.Chrome(chrome_options=options)
+def slow_dl(homepage, key, value, filename):
     driver.get(homepage)
     try:
-        driver.find_element_by_link_text(key).click()
+        if key == "xpath":
+            driver.find_element_by_xpath(value).click()
+        else:
+            driver.find_element_by_link_text(value).click()
     except:
         print("Downloading", "\"" + key + "\"", "in", "\"" + homepage + "\"", "fails")
     time.sleep(3)
-    driver.close()
     re_name(filename)
 
 
@@ -91,16 +93,20 @@ for etf in ETFs:
     elif family == "www.proshares.com":
         fast_dl(homepage, "", "NAV History", "href",etf + ".csv")
     elif family == "us.spdrs.com":
-        slow_dl(homepage, "Most Recent NAV / NAV History XLS", etf + ".xls")
+        slow_dl(homepage, "text", "Most Recent NAV / NAV History XLS", etf + ".xls")
     elif family == "www.invesco.com":
-        slow_dl(homepage, "Historical NAVs", etf + ".csv")
+        slow_dl(homepage, "text", "Historical NAVs", etf + ".csv")
     elif family == "www.pimcoetfs.com":
         fast_dl(homepage, "http://" + family, "NAV History Download", "href", etf + ".xls")
     elif family == "www.wisdomtree.com":
         fast_dl(homepage, "", "View NAV and Premium/Discount History", "data-href" ,etf + ".txt")   #html code will be downloaded
     elif family == "dws.com":
-        slow_dl(homepage, "NAV History (CSV)", etf + ".csv")
+        slow_dl(homepage, "text", "NAV History (CSV)", etf + ".csv")
+    elif family == "www.vaneck.com":
+        slow_dl(homepage, "xpath", "/html/body/div[5]/section/section[2]/div/div[6]/div/div[8]/div/div/div/div/div/div/div/div/div/table/tbody/tr[2]/td[8]/a", etf + ".xls")
     else:
         continue
+    
+    driver.close()
         
 
