@@ -107,6 +107,6 @@ for etf in ETFs:
     else:
         continue
     
-    driver.close()
+driver.close()
         
 
