@@ -25,7 +25,7 @@ def html_code(url):
     soup = bs(r.text, 'html.parser')
     return soup 
 
-def bs_dl(homepage, head, value, target, filename):
+def req_dl(homepage, head, value, target, filename):
     soup = html_code(homepage)
     if soup == "FAIL":
         return
@@ -75,9 +75,9 @@ for etf in ETFs:
     #the url of ETF's family (like iShares, SPDR...)
     family = homepage.split('/')[2]
     if family == "www.ishares.com":
-        bs_dl(homepage, "https://" + family, "Download", "href", etf + ".xls")
+        req_dl(homepage, "https://" + family, "Download", "href", etf + ".xls")
     elif family == "www.proshares.com":
-        bs_dl(homepage, "", "NAV History", "href", etf + ".csv")
+        req_dl(homepage, "", "NAV History", "href", etf + ".csv")
     elif family == "us.spdrs.com":
         sele_dl(homepage, "text", "Most Recent NAV / NAV History XLS", etf + ".xls")
     elif family == "www.invesco.com":
