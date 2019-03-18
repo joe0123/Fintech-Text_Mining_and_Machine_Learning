@@ -34,13 +34,12 @@ df1 = pd.read_csv(path + '/' + files[0],encoding='gbk')  #讀第一個csv文件�
 
 #df1.head()
 
-files.remove('.DS_Store')
+#files.remove('.DS_Store')
 #print(files)
 
 for file in files[1:]:
     df2 = pd.read_csv(path +'/' + file) 
     df1 = df1.merge(df2, on='Date', how='left')
 
-df1.head()
-
 df1.to_csv(path + '/' + 'total.csv') #存新檔
+df1.head(30)
