@@ -1,59 +1,52 @@
 import os
 import sys
-import time
+from datetime import datetime
 import pandas as pd
-
-from random import randint
-
 from selenium import webdriver
+from selenium.webdriver.common.by import By
+from selenium.webdriver.support.ui import WebDriverWait
+from selenium.webdriver.support import expected_conditions as EC
 
-df = pd.read_csv(sys.argv[1])
-ETFs = df["Symbol"].values
+class YahooFinanceCrawler(object):
+	def __init__(self,download_dir='tmp'):
+		options = webdriver.ChromeOptions()
+		if not os.path.exists(download_dir):
+			os.mkdir(download_dir)
+		prefs = {'profile.default_content_settings.popups': 0, 'download.default_directory': os.path.join(os.getcwd(),download_dir)}
+		options.add_experimental_option('prefs', prefs)
+		self.driver = webdriver.Chrome(chrome_options=options)
 
-for ETF in ETFs: 
-    targetAsset = ETF
-    
-    driver = webdriver.Chrome('/anaconda3/bin/chromedriver')
-    driver.get('https://finance.yahoo.com/quote/'+targetAsset+'?ltr=1')
-    
-    #inputElement.submit()
-    time.sleep(5)
-    
-    # Select the subpage of Historical Data.
-    items = driver.find_elements_by_css_selector("a span")
-    for item in items:
-        if item.text == "Historical Data":
-            item.click()
-            break
-    time.sleep(5)
+		date = datetime.now()
+		self.timestamp='%d'% datetime(date.year,date.month,date.day).timestamp()
 
-    # Select the dialog.
-    arrows = driver.find_elements_by_css_selector(".historical div div span svg")
-    arrows[0].click()
-    
-    time.sleep(5)
-    
-    # Time period
-    driver.find_element_by_name("startDate").clear()
-    driver.find_element_by_name("startDate").click()
-    driver.find_element_by_name("startDate").send_keys("01/01/2016")
+	def __del__(self):
+		self.driver.quit()
 
-    driver.find_element_by_name("endDate").clear()
-    driver.find_element_by_name("endDate").click()
-    driver.find_element_by_name("endDate").send_keys("12/31/2018")
+	def get_etf_csv(self, etf_name):
+		self.driver.get('https://finance.yahoo.com/quote/'+etf_name+'/history?period1=1451577600&period2='+self.timestamp+'&interval=1d&filter=history&frequency=1d')
+		try:
+			button=WebDriverWait(self.driver,10).until(EC.element_to_be_clickable((By.XPATH,"//span[contains(text(),'Download Data')]")))
+			self.driver.implicitly_wait(2)
+			button.click()
+		except:
+			print(etf_name,'is not reachable.',file=sys.stderr)
 
-    driver.find_element_by_xpath("//button[contains(@class,'Py(9px) Miw(80px)! Fl(start)')]").click()
-    time.sleep(2)
-    
-    # Apply the change.
-    driver.find_element_by_xpath("//button[contains(@class,'Py(9px) Fl(end)')]").click()
-    time.sleep(2)
-    
+def main():
+	df = pd.read_csv(sys.argv[1])
+	etf_list = list(df["Symbol"].values)
 
-    # Download the data.
-    driver.find_element_by_xpath("//span[contains(text(),'Download Data')]").click()
+	crawler=YahooFinanceCrawler()
+	for etf in etf_list:
+		crawler.get_etf_csv(etf)
 
-    time.sleep(5)
+	for etf in etf_list:
+		if not os.path.exists('tmp/' + etf + '.csv'):
+			crawler.get_etf_csv(etf)
+	
+	df_list = [pd.read_csv('tmp/'+etf_list[0]+'.csv')['Date']]+[pd.read_csv('tmp/' + etf + '.csv')['Adj Close'] for etf in etf_list]
+	df = pd.concat(df_list, axis=1, ignore_index=True)
+	df.columns = ['Date'] + etf_list
+	print(df.head())
 
-    # Close the browser.
-    driver.quit()
+if __name__ == "__main__":
+	main()
