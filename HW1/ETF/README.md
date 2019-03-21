@@ -10,3 +10,9 @@ Moreover, the combination of *requests* and *beautifulsoup* has more detailed se
 
 ## Flow Diagram
 <img src="https://github.com/joe0123/Fintech-Text_Mining_and_Machine_Learning/blob/master/HW1/ETF/Flow_diagram.png" width="70%"/>
+
+### Five Questions for Novices
+>1. 
+>>abc
+>2. 
+>>abc
