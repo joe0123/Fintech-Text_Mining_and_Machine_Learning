@@ -12,7 +12,23 @@ Moreover, the combination of *requests* and *beautifulsoup* has more detailed se
 <img src="https://github.com/joe0123/Fintech-Text_Mining_and_Machine_Learning/blob/master/HW1/ETF/Flow_diagram.png" width="70%"/>
 
 ### Five Questions for Novices
->1. 
->>abc
->2. 
->>abc
+1.
+```
+abc
+```
+2.
+```
+abc
+```
+3.
+```
+abc
+```
+4.
+```
+abc
+```
+5. Historical data is always downloaded incompletely before the suspended process (due to sleep()) continues
+```
+Maybe your network is unstable or the download speed is too slow
+```
