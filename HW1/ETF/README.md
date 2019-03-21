@@ -12,21 +12,21 @@ Moreover, the combination of *requests* and *beautifulsoup* has more detailed se
 <img src="https://github.com/joe0123/Fintech-Text_Mining_and_Machine_Learning/blob/master/HW1/ETF/Flow_diagram.png" width="70%"/>
 
 ### Five Questions for Novices
-1.
+1. Syntex error is reported
 ```
-=> abc
+=> Make sure you're using python 3
 ```
-2.
+2. Module not found error is reported
 ```
-=> abc
+=> *pip install* every module imported
 ```
-3.
+3. Type error is reported
 ```
-=> abc
+=> Make sure all modules imported are updated
 ```
-4.
+4. There is no 'driver' attribute found
 ```
-=> abc
+=> Download Google Chrome!
 ```
 5. Historical data is always downloaded incompletely before the suspended process (due to sleep()) continues
 ```
