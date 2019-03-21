@@ -1,5 +1,5 @@
 # ETF crawler
-In this project, we download all daily adjusted close of ETFs in 'Junk-ETF-list.csv' from the last trading day in 2015 untill now.
+In this project, we download all daily adjusted close of ETFs, founded before 2015/12/31, in 'Junk-ETF-list.csv' untill now.
 Because there is no any clue found in their homepages, we crawl Yahoo Finance to accomplish our mission.
 
 
