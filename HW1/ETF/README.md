@@ -18,7 +18,7 @@ Moreover, the combination of *requests* and *beautifulsoup* has more detailed se
 ```
 2. Module not found error is reported
 ```
-=> *pip install* every module imported
+=> *pip* *install* every module imported
 ```
 3. Type error is reported
 ```
