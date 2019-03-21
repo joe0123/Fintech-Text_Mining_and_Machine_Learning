@@ -12,11 +12,11 @@ Moreover, the combination of *requests* and *beautifulsoup* has more detailed se
 <img src="https://github.com/joe0123/Fintech-Text_Mining_and_Machine_Learning/blob/master/HW1/ETF/Flow_diagram.png" width="70%"/>
 
 ### Questions for Novices
-1. Syntex error is reported
+1. Syntex error is reported  
 `=> Make sure you're using python 3`
 2. Module not found error is reported  
 `=> "pip install" every module imported`
-3. Type error is reported
+3. Type error is reported  
 `=> Make sure all modules imported are updated`
 4. There is no 'driver' attribute found  
 `=> Download Google Chrome!`
