@@ -4,8 +4,8 @@ Because there is no any clue found in their homepages, we crawl Yahoo Finance to
 
 
 ## Crawler Package
-We implement **Selenium** as our crawler.  
-In collaboration with _driver_, though time-consuming, it's rather more straightforward for general users.  
-Moreover, the combination of **requests** and **beautifulsoup** is supposed to set more detailed nuts and bolts in the face of https://finance.yahoo.com/.
+We implement ***Selenium*** as our crawler.  
+In collaboration with *driver*, though time-consuming, it's rather more straightforward for general users.  
+Moreover, the combination of **requests** and **beautifulsoup** has more detailed setups in the face of https://finance.yahoo.com/.
 
 ## Flow Diagram
