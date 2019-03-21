@@ -9,3 +9,4 @@ In collaboration with *driver*, though time-consuming, it's rather more straight
 Moreover, the combination of *requests* and *beautifulsoup* has more detailed setups in the face of https://finance.yahoo.com/.
 
 ## Flow Diagram
+<img src="https://github.com/joe0123/Fintech-Text_Mining_and_Machine_Learning/blob/master/HW1/ETF/Flow_diagram.png" width="70%"/>
