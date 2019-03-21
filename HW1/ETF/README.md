@@ -4,7 +4,7 @@ Because there is no any clue found in their homepages, we crawl Yahoo Finance to
 
 
 ## Crawler Package
-We implement ***Selenium*** as our crawler.  
+We implement <font color=red><b>Selenium</b></font> as our crawler.  
 In collaboration with *driver*, though time-consuming, it's rather more straightforward for general users.  
 Moreover, the combination of **requests** and **beautifulsoup** has more detailed setups in the face of https://finance.yahoo.com/.
 
