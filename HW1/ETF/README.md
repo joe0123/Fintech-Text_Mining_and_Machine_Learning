@@ -14,21 +14,21 @@ Moreover, the combination of *requests* and *beautifulsoup* has more detailed se
 ### Five Questions for Novices
 1.
 ```
-abc
+=> abc
 ```
 2.
 ```
-abc
+=> abc
 ```
 3.
 ```
-abc
+=> abc
 ```
 4.
 ```
-abc
+=> abc
 ```
 5. Historical data is always downloaded incompletely before the suspended process (due to sleep()) continues
 ```
-Maybe your network is unstable or the download speed is too slow
+=> Maybe your network is unstable or the download speed is too slow
 ```
