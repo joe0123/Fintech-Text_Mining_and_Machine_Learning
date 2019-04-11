@@ -25,8 +25,6 @@ for i in range(len(co_matrix)):
             G.add_edge(nm_list[i], nm_list[j], weight = co_matrix[i][j])
 
 pos = nx.spring_layout(G, k = 0.5, iterations = 15)
-nx.draw(G, pos, with_labels=True, font_size = 8, font_weight = 'bold', 
-        node_size = [u[1]['size']  for u in G.nodes.data()],
-        width = [G[u][v]['weight'] for u, v in G.edges()], 
-        edge_color = '#adabab', node_color = '#84c5ed')
+nx.draw(G, pos, with_labels=True, font_size = 8, font_weight = 'bold', node_size = [u[1]['size']  for u in G.nodes.data()],
+        width = [G[u][v]['weight'] for u, v in G.edges()], edge_color = '#adabab', node_color = '#84c5ed')
 plt.show()
