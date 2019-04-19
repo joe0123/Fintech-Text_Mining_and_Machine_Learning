@@ -1,10 +1,13 @@
+from sys import argv
 import pandas as pd
 import numpy as np
 
-
-data = pd.read_csv('client_list.csv', encoding='utf-8')
-
+assert len(argv)==3
+data = pd.read_csv(argv[1], dtype={'ID':int,'QUESTION_INDEX':str,'ANS_ORDER':int,'ANS_NOTE':str}, encoding='utf-8')
+data = data.sort_values(['ID','QUESTION_INDEX'])
 out = []
+
+#remove A0,A3,A6,A7,A13
 option_n = {'A01':24, 'A02':7, 'A04':5, 'A05':3, 'A08':7, 'A09':9, 'A10':5, 'A11':5, 'A12':3, 'A14':3, 'B01':5, 'B02':5, 'B03':5, 'B04':5, 'B05':5, 'B06':5, 'B07':5}
 end=False
 it=data.iterrows()
@@ -12,7 +15,7 @@ row=next(it)[1]
 while not end:
 	#print(row)
 	line = [row['ID']]
-	assert row['QUESTION_INDEX']=='A01'
+	assert row['QUESTION_INDEX'] == 'A01'
 	for question_name in option_n:
 		while row['QUESTION_INDEX']==question_name:
 			#print(row)
@@ -21,7 +24,7 @@ while not end:
 				if row['ANS_ORDER'] == 1:
 					option[0] = 1
 				elif row['ANS_ORDER'] == 2:
-					child_n = str(row['ANS_NOTE'])[0]
+					child_n = row['ANS_NOTE'][0]
 					if child_n.isdigit() and int(child_n) > 0:
 						option[1] = 1
 					else:
@@ -40,7 +43,7 @@ while not end:
 	out.append(line)
 
 df = pd.DataFrame(out)
-df.to_csv('client_vec.csv', index=False,
+df.to_csv(argv[2], index=False,
 			header=['客戶ID'
 			, '職業-軍警公教', '職業-資訊業', '職業-金融業', '職業-製造業', '職業-服務業', '職業-醫療服務業', '職業-學生', '職業-退休人士', '職業-餐飲旅館/旅遊業', '職業-量販店', '職業-政治性職務', '職業-營造/不動產業', '職業-進出口貿易', '職業-專業服務', '職業-民間匯兌業/虛擬貨幣產業', '職業-武器設備業', '職業-非營利機構', '職業-高單價物品之買賣或拍賣', '職業-當鋪/銀樓', '職業-學齡前', '職業-家管', '職業-待業中', '職業-自營商', '職業-其他'
 			, '職務-基層職員', '職務-專業人員', '職務-技術人員', '職務-中階主管', '職務-高階主管', '職務-企業負責人', '職務-其他'
