@@ -2,7 +2,9 @@ from sys import argv
 import pandas as pd
 import numpy as np
 
-assert len(argv)==3
+if len(argv) != 3:
+	print('Usage: python3 sparse_matrix.py INPUT.csv OUTPUT.csv')
+	exit(1)
 data = pd.read_csv(argv[1], dtype={'ID':int,'QUESTION_INDEX':str,'ANS_ORDER':int,'ANS_NOTE':str}, encoding='utf-8')
 data = data.sort_values(['ID','QUESTION_INDEX'])
 out = []
