@@ -23,7 +23,7 @@ for i in range(len(co_matrix)):
 
 for i in range(len(co_matrix)):
     for j in range(len(co_matrix)):
-        if (i != j) and (co_matrix[i][j] != 0.0):
+        if (i != j) and (co_matrix[i][j] >= 0.8):
             G.add_edge(nm_list[i], nm_list[j], weight = co_matrix[i][j])
 
 #k = distances between nodes
