@@ -6,7 +6,7 @@ import matplotlib
 original_data = pd.read_csv("co-occurrence_matrix.csv").drop(columns=["label_headers"]).values.flatten()
 data = [i for i in original_data if i > 0]
 _, axs=plt.subplots()
-axs.hist(data, bins = 20, cumulative = True, edgecolor='black',density=True)
+axs.hist(data, bins = 20, cumulative = -1, edgecolor='black',density=True)
 axs.yaxis.set_major_formatter(matplotlib.ticker.PercentFormatter(xmax=1))
 plt.show()
 
