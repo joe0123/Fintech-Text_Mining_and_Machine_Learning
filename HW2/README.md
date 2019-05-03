@@ -7,8 +7,8 @@
 ## 2. 得出co-occurrence matrix ([co-occurrence_matrix.ipynb](https://github.com/joe0123/Fintech-Text_Mining_and_Machine_Learning/blob/master/HW2/co-occurrence_matrix.ipynb))
 1. 讀取`client_vec.csv`，算出co-occurrence matrix，將結果存至`co-occurrence matrix.csv`
 2. 得到熱點圖
-![](https://github.com/joe0123/Fintech-Text_Mining_and_Machine_Learning/blob/master/HW2/heatmap_output.png)
+![](https://github.com/joe0123/Fintech-Text_Mining_and_Machine_Learning/blob/master/HW2/heatmap_output_5.png)
 
 ## 3. 畫出共現圖 ([co-occurrence_graph.py](https://github.com/joe0123/Fintech-Text_Mining_and_Machine_Learning/blob/master/HW2/co-occurrence_graph.py))
 讀取`co-occurrence matrix.csv`，畫出共現圖
-![](https://github.com/joe0123/Fintech-Text_Mining_and_Machine_Learning/blob/master/HW2/co-occurrence_graph.png)
+![](https://github.com/joe0123/Fintech-Text_Mining_and_Machine_Learning/blob/master/HW2/co-occurrence_graph_5.png)
