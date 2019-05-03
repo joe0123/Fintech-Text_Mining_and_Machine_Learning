@@ -1,4 +1,4 @@
-#coding:utf-8
+import sys
 import pandas as pd
 import networkx as nx
 import matplotlib.pyplot as plt
@@ -9,11 +9,11 @@ plt.rcParams['font.sans-serif'] = ['Microsoft JhengHei']
 plt.rcParams['axes.unicode_minus'] = False
 #reference: https://blog.csdn.net/helunqu2017/article/details/78602959
 
-df = pd.read_csv("co-occurrence_matrix.csv")
+df = pd.read_csv(sys.argv[1], encoding="utf-8")
 nm_list = df["label_headers"].values
 co_matrix = df.drop(columns=["label_headers"]).values
 freq_list = []
-with open('co-occurrence_matrix_diagonal.txt', 'r') as f:
+with open(sys.argv[2], 'r') as f:
     freq_list = [float(i.strip('\n'))*5 for i in f]
 
 G = nx.Graph()
@@ -21,9 +21,11 @@ for i in range(len(co_matrix)):
     if freq_list[i] != 0:
         G.add_node(nm_list[i], size = freq_list[i])
 
+
 for i in range(len(co_matrix)):
     for j in range(len(co_matrix)):
         if (i != j) and (co_matrix[i][j] >= 0.8):
+            assert(freq_list[i] != 0 and freq_list[j] != 0)
             G.add_edge(nm_list[i], nm_list[j], weight = co_matrix[i][j])
 
 #k = distances between nodes
