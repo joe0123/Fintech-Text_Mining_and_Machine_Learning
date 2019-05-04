@@ -5,7 +5,7 @@ import pandas as pd
 import numpy as np
 from scipy import stats
 def get_return(table):
-	return (table[:-1,:] - table[1:,:]) / table[1:,:]
+	return (table[1:,:] - table[:-1,:]) / table[:-1,:]
 
 def ASKSR(table, r):
 	#print(table)
