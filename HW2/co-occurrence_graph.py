@@ -1,3 +1,5 @@
+#cmd: python co-occurrence_graph.py (matrix).csv (matrix_diag).csv [(diff_matrix).csv]
+
 import sys
 import pandas as pd
 import networkx as nx
@@ -9,27 +11,38 @@ plt.rcParams['font.sans-serif'] = ['Microsoft JhengHei']
 plt.rcParams['axes.unicode_minus'] = False
 #reference: https://blog.csdn.net/helunqu2017/article/details/78602959
 
-df = pd.read_csv(sys.argv[1], encoding="utf-8")
-nm_list = df["label_headers"].values
-co_matrix = df.drop(columns=["label_headers"]).values
-freq_list = []
-with open(sys.argv[2], 'r') as f:
-    freq_list = [float(i.strip('\n'))*5 for i in f]
+def drawing_graph(G):
+    #k = distances between nodes
+    pos = nx.spring_layout(G, k = 1, iterations = 20)
+    nx.draw(G, pos, with_labels=True, font_size=8, font_weight='bold', node_size=[u[1]['size']  for u in G.nodes.data()],
+            width = [G[u][v]['weight'] for u, v in G.edges()], edge_color='#adabab', node_color='#84c5ed')
+    plt.show()
+
+
+df_comatrix = pd.read_csv(sys.argv[1], index_col="label_headers", encoding="utf-8")
+df_freq = pd.read_csv(sys.argv[2], index_col="label_headers", encoding="utf-8")
+#draw only these specific nodes into graph
+spec_nodes = df_comatrix.index.values
 
 G = nx.Graph()
-for i in range(len(co_matrix)):
-    if freq_list[i] != 0:
-        G.add_node(nm_list[i], size = freq_list[i])
+for i in spec_nodes:
+    if df_freq.ix[i, "freq"] != 0:
+        G.add_node(i, size = df_freq.ix[i, "freq"])
+    for j in df_comatrix.columns.values:
+        if (i != j and df_comatrix.ix[i, j] > 0):
+            assert(df_freq.ix[i, "freq"] != 0 and df_freq.ix[i, "freq"] != 0)
+            G.add_edge(i, j, weight = df_comatrix.ix[i, j])
 
+if len(sys.argv) == 4:
+    df_diffmatrix = pd.read_csv(sys.argv[3], index_col="label_headers", encoding="utf-8")
+    sub_edge = []
+    for i in spec_nodes:
+        for j in df_diffmatrix.columns.values:
+            #condition according to diff_matrix
+            if df_diffmatrix.ix[i, j] <= -0.4:
+                sub_edge.append((i, j))
+    H = G.edge_subgraph(sub_edge)
+    drawing_graph(H)
+else:
+    drawing_graph(G)
 
-for i in range(len(co_matrix)):
-    for j in range(len(co_matrix)):
-        if (i != j) and (co_matrix[i][j] >= 0.8):
-            assert(freq_list[i] != 0 and freq_list[j] != 0)
-            G.add_edge(nm_list[i], nm_list[j], weight = co_matrix[i][j])
-
-#k = distances between nodes
-pos = nx.spring_layout(G, k = 1, iterations = 50)
-nx.draw(G, pos, with_labels=True, font_size=8, font_weight='bold', node_size=[u[1]['size']  for u in G.nodes.data()],
-        width = [G[u][v]['weight'] for u, v in G.edges()], edge_color='#adabab', node_color='#84c5ed')
-plt.show()
