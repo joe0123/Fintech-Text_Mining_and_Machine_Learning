@@ -1,0 +1,8 @@
+曾做過的事：
+1. 畫出整個統計資料的co-occurrence graph
+2. 畫出rank4和5的co-occurrence graph
+3. 畫出rank4和5中共現值較大的co-occurrence graph
+(用histogram找出適當的threshold)
+4. 畫出rank4中共現值比rank5顯著的co-occurrence subgraph，也畫出rank5中共現值比rank4顯著的co-occurrence subgraph
+(用diff-matrix找出兩個rank的共現差值，再用histogram找出適當threshold)
+5. 畫出第四步subgraph中"年收入"的subgraph
