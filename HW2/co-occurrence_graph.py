@@ -1,3 +1,5 @@
+#cmd: python co-occurrence_graph.py (matrix).csv (matrix_diag).csv [(diff_matrix).csv]
+
 import sys
 import pandas as pd
 import networkx as nx
@@ -9,27 +11,34 @@ plt.rcParams['font.sans-serif'] = ['Microsoft JhengHei']
 plt.rcParams['axes.unicode_minus'] = False
 #reference: https://blog.csdn.net/helunqu2017/article/details/78602959
 
-df = pd.read_csv(sys.argv[1], encoding="utf-8")
-nm_list = df["label_headers"].values
-co_matrix = df.drop(columns=["label_headers"]).values
-freq_list = []
-with open(sys.argv[2], 'r') as f:
-    freq_list = [float(i.strip('\n'))*5 for i in f]
+def drawing_graph(G, nodesize, edgesize):
+    #k = distances between nodes
+    pos = nx.spring_layout(G, k = 1, iterations = 20)
+    nx.draw(G, pos, with_labels=True, font_size=8, font_weight='bold', node_size=nodesize,
+            width = edgesize, edge_color='#adabab', node_color='#84c5ed')
+    plt.show()
+
+df_comatrix = pd.read_csv(sys.argv[1], index_col="label_headers", encoding="utf-8")
+df_freq = pd.read_csv(sys.argv[2], index_col="label_headers", encoding="utf-8")
+#draw only these specific nodes into graph
+spec_nodes = [i for i in df_comatrix.index.values if i.find("年收入") != -1]
 
 G = nx.Graph()
-for i in range(len(co_matrix)):
-    if freq_list[i] != 0:
-        G.add_node(nm_list[i], size = freq_list[i])
+for i in spec_nodes:
+    for j in df_comatrix.columns.values:
+        if i != j and df_comatrix.ix[i, j] > 0.6:
+            G.add_edge(i, j)
 
-
-for i in range(len(co_matrix)):
-    for j in range(len(co_matrix)):
-        if (i != j) and (co_matrix[i][j] >= 0.8):
-            assert(freq_list[i] != 0 and freq_list[j] != 0)
-            G.add_edge(nm_list[i], nm_list[j], weight = co_matrix[i][j])
-
-#k = distances between nodes
-pos = nx.spring_layout(G, k = 1, iterations = 50)
-nx.draw(G, pos, with_labels=True, font_size=8, font_weight='bold', node_size=[u[1]['size']  for u in G.nodes.data()],
-        width = [G[u][v]['weight'] for u, v in G.edges()], edge_color='#adabab', node_color='#84c5ed')
-plt.show()
+if len(sys.argv) == 4:
+    df_diffmatrix = pd.read_csv(sys.argv[3], index_col="label_headers", encoding="utf-8")
+    sub_edge = []
+    for i in spec_nodes:
+        for j in G.nodes:
+            #condition according to diff_matrix
+            if i != j and (df_diffmatrix.ix[i, j] <= -0.6 or df_diffmatrix.ix[j, i] <= -0.6):
+                sub_edge.append((i, j))
+                print(i, j, df_comatrix.ix[i, j])
+    H = G.edge_subgraph(sub_edge)
+    drawing_graph(H, [df_freq.ix[u, "freq"] for u in H.nodes], [df_comatrix.ix[u, v]*5 for u, v in H.edges])
+else:
+    drawing_graph(G, [df_freq.ix[u, "freq"] for u in G.nodes], [df_comatrix.ix[u, v]*5 for u, v in G.edges])
