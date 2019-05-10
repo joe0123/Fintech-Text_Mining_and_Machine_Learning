@@ -30,8 +30,10 @@
 
 #### rank4 co-occurrence value histogram:
 #### rank4 co-occurrence subgraph:  
+![](https://github.com/joe0123/Fintech-Text_Mining_and_Machine_Learning/blob/master/HW2/graph_4_80.png)
 #### rank5 co-occurrence value histogram:  
 #### rank5 co-occurrence subgraph:  
+![](https://github.com/joe0123/Fintech-Text_Mining_and_Machine_Learning/blob/master/HW2/graph_5_80.png)
 
 ## 5. 比較風險等級4和5共現值 畫出在各matrix中較為顯著的edge
 1. 執行`python diff_matrix.py co-occurrence_matrix_4.csv co-occurrence_matrix_5.csv diff_matrix_45.csv`，將co-occurrence_matrix_4減去co-occurrence_matrix_5.csv後存為diff_matrix_45.csv；其中，正值表示該共現值在co-occurrence_matrix_4中大於co-occurrence_matrix_5，負值則相反。  
