@@ -26,7 +26,8 @@ spec_nodes = [i for i in df_comatrix.index.values if i.find("年收入") != -1]
 G = nx.Graph()
 for i in spec_nodes:
     for j in df_comatrix.columns.values:
-        if i != j and df_comatrix.ix[i, j] > 0.6:
+#condition
+        if i != j and df_comatrix.ix[i, j] >= 0.8:
             G.add_edge(i, j)
 
 if len(sys.argv) == 4:
@@ -34,8 +35,8 @@ if len(sys.argv) == 4:
     sub_edge = []
     for i in spec_nodes:
         for j in G.nodes:
-            #condition according to diff_matrix
-            if i != j and (df_diffmatrix.ix[i, j] <= -0.6 or df_diffmatrix.ix[j, i] <= -0.6):
+#condition according to diff_matrix
+            if i != j and (df_diffmatrix.ix[i, j] >= 0.6 or df_diffmatrix.ix[j, i] >= 0.6):
                 sub_edge.append((i, j))
                 print(i, j, df_comatrix.ix[i, j])
     H = G.edge_subgraph(sub_edge)
