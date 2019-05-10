@@ -19,14 +19,14 @@
 (以下以風險等級四為例，將4換成5便可求得風險等級5的資料)  
 讀取`co-occurrence_matrix_4.csv`，畫出共現圖  
 #### rank4:  
-![](https://github.com/joe0123/Fintech-Text_Mining_and_Machine_Learning/blob/master/HW2/co-occurrence_graph_4.png)
+![](https://github.com/joe0123/Fintech-Text_Mining_and_Machine_Learning/blob/master/HW2/graph_4.png)
 #### rank5:  
-![](https://github.com/joe0123/Fintech-Text_Mining_and_Machine_Learning/blob/master/HW2/co-occurrence_graph_5.png)
+![](https://github.com/joe0123/Fintech-Text_Mining_and_Machine_Learning/blob/master/HW2/graph_5.png)
 
 ## 4. 篩出co-occurrence matrix中value較高的edge 
 (以下以風險等級四為例，將4換成5便可求得風險等級5的資料)  
 1. 執行`python histogram_percentage.py co-occurrence_matrix_4.csv`畫出所有共現值的histogram，選出0.8作為threshold(該處比例的變化較穩定)。  
-2. 在改動co-occurrence_graph.py的condition後執行`python co-occurrence_graph.py co-occurrence_matrix_4.csv co-occurrence_matrix_diag_4.csv`畫出subgraph  
+2. 在改動co-occurrence_graph.py的condition後，執行`python co-occurrence_graph.py co-occurrence_matrix_4.csv co-occurrence_matrix_diag_4.csv`畫出subgraph  
 
 #### rank4 co-occurrence value histogram:
 #### rank4 co-occurrence subgraph:  
@@ -35,10 +35,9 @@
 
 ## 5. 比較風險等級4和5共現值 畫出在各matrix中較為顯著的edge
 1. 執行`python diff_matrix.py co-occurrence_matrix_4.csv co-occurrence_matrix_5.csv diff_matrix_45.csv`，將co-occurrence_matrix_4減去co-occurrence_matrix_5.csv後存為diff_matrix_45.csv；其中，正值表示該共現值在co-occurrence_matrix_4中大於co-occurrence_matrix_5，負值則相反。  
-2. 接著參考第四步，分別畫出diff_matrix_45中所有正值和負值的histogram(記得更動histogram_percentage.py中的condition)，
-選出0.6作為正值、-0.6為負值的threshold。  
+2. 接著參考第四步，分別畫出diff_matrix_45中所有正值和負值的histogram，選出0.6作為正值、-0.6為負值的threshold。  
 (以下以風險等級四為例，將4換成5便可求得風險等級5的資料)  
-3. 在改動co-occurrence_graph.py的condition後，執行`python co-occurrence_graph.py co-occurrence_matrix_4.csv co-occurrence_matrix_diag_4.csv diff_matrix_45.csv`畫出subgraph  
+3. 在改動co-occurrence_graph.py的condition according to diff_matrix後，執行`python co-occurrence_graph.py co-occurrence_matrix_4.csv co-occurrence_matrix_diag_4.csv diff_matrix_45.csv`畫出subgraph  
 
 #### rank4 co-occurrence subgraph:(表示這些edge在matrix_4比在matrix_5還顯著)  
 
@@ -46,7 +45,7 @@
 
 ## 6. 挑出subgraph中所有與年收入相關的edge
 (以下以風險等級四為例，將4換成5便可求得風險等級5的資料)  
-1. 在改動co-occurrence_graph.py的condition後，執行`python co-occurrence_graph.py co-occurrence_matrix_4.csv co-occurrence_matrix_diag_4.csv diff_matrix_45.csv`畫出subgraph  
+1. 將改動co-occurrence_graph.py的spec_node設為\[i for i in df_comatrix.index.values if i.find("年收入") != -1\]之後，執行`python co-occurrence_graph.py co-occurrence_matrix_4.csv co-occurrence_matrix_diag_4.csv diff_matrix_45.csv`畫出subgraph  
 
 #### rank4 co-occurrence subgraph:  
 #### rank5 co-occurrence subgraph:  
