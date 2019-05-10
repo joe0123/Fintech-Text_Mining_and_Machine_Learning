@@ -7,7 +7,7 @@ import matplotlib
 
 original_data = pd.read_csv(sys.argv[1]).drop(columns=["label_headers"]).values.flatten()
 #condition
-data = [i for i in original_data if i <= 0]
+data = [i for i in original_data if i < 0]
 #print(len(data))
 
 _, axs=plt.subplots()
