@@ -21,8 +21,8 @@ def drawing_graph(G, nodesize, edgesize):
 df_comatrix = pd.read_csv(sys.argv[1], index_col="label_headers", encoding="utf-8")
 df_freq = pd.read_csv(sys.argv[2], index_col="label_headers", encoding="utf-8")
 #draw only these specific nodes into graph
-#spec_nodes = [i for i in df_comatrix.index.values]
-spec_nodes = [i for i in df_comatrix.index.values if i.find("年收入") != -1]
+spec_nodes = [i for i in df_comatrix.index.values]
+#spec_nodes = [i for i in df_comatrix.index.values if i.find("年收入") != -1]
 
 G = nx.Graph()
 for i in spec_nodes:
