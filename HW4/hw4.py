@@ -51,8 +51,8 @@ def ETF_evaluation(etf_list, frequency, method, download_dir='tmp', has_download
 		frequency: 'month', 'week', 'day'
 		method:    function(array, rate)
 	@return: pd.df: the ranking of ETFs '''
-	crawler = YahooFinanceCrawler(download_dir=download_dir)
-	df, _ = crawler.get_etf_df(etf_list, 'Adj Close', frequency, has_download)
+	crawler = YahooFinanceCrawler(download_dir=download_dir, has_download=has_download)
+	df, _ = crawler.get_etf_df(etf_list, 'Adj Close', frequency)
 	#print(df)
 	if kwargs:
 		result = method(get_return(df.values), 0.0243, **kwargs)
@@ -71,25 +71,25 @@ date=datetime.today().date()
 etf_list = df["Symbol"][df['Inception'] <= '%d/%d/%d' % (date.year-3, date.month, date.day)].values
 #print(etf_list)
 
-ASSR_month_df=ETF_evaluation(etf_list,'month',ASSR, has_download= True,delta_t=1/12)
+ASSR_month_df=ETF_evaluation(etf_list,'month',ASSR, download_dir='ASSR_month',delta_t=1/12)
 print('ASSR month',ASSR_month_df.head(20),sep='\n')
 
 
-ASSR_week_df = ETF_evaluation(etf_list,'week',ASSR,download_dir='tmp_week',has_download=True,delta_t=1/52)
+ASSR_week_df = ETF_evaluation(etf_list,'week',ASSR,download_dir='ASSR_week',delta_t=1/52)
 print('ASSR week',ASSR_week_df.head(20),sep='\n')
 
 
-Omega_month_df = ETF_evaluation(etf_list, 'month', Sharpe_Omega, has_download=True)
+Omega_month_df = ETF_evaluation(etf_list, 'month', Sharpe_Omega, download_dir='Omega_month')
 print('Omega month',Omega_month_df.head(20),sep='\n')
 
 
-Omega_week_df = ETF_evaluation(etf_list, 'week', Sharpe_Omega, has_download=True)
+Omega_week_df = ETF_evaluation(etf_list, 'week', Sharpe_Omega,download_dir='Omega_week')
 print('Omega week',Omega_week_df.head(20),sep='\n')
 
 
-riskiness_month_df = ETF_evaluation(etf_list, 'month', riskiness, has_download=True)
+riskiness_month_df = ETF_evaluation(etf_list, 'month', riskiness, download_dir='riskiness_month')
 print('riskiness month',riskiness_month_df.head(20),sep='\n')
 
 
-riskiness_week_df = ETF_evaluation(etf_list, 'week', riskiness, has_download=True)
+riskiness_week_df = ETF_evaluation(etf_list, 'week', riskiness,download_dir='riskiness_week')
 print('riskiness week',riskiness_week_df.head(20),sep='\n')
