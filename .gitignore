@@ -1,4 +1,12 @@
+HW4/ASSR_month/
+HW4/ASSR_week/
+HW4/Omega_month/
+HW4/Omega_week/
+HW4/riskiness_month/
+HW4/riskiness_week/
+HW4/tmp_week/
 HW4/tmp/
+
 .vscode/
 # Byte-compiled / optimized / DLL files
 __pycache__/
