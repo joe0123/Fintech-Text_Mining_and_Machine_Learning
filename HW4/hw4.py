@@ -70,26 +70,27 @@ df = pd.read_csv(sys.argv[1])
 date=datetime.today().date()
 etf_list = df["Symbol"][df['Inception'] <= '%d/%d/%d' % (date.year-3, date.month, date.day)].values
 #print(etf_list)
+has_download = True
 
-ASSR_month_df=ETF_evaluation(etf_list,'month',ASSR, download_dir='ASSR_month',delta_t=1/12)
+ASSR_month_df=ETF_evaluation(etf_list,'month',ASSR, download_dir='ASSR_month',has_download=has_download,delta_t=1/12)
 print('ASSR month',ASSR_month_df.head(20),sep='\n')
 
 
-ASSR_week_df = ETF_evaluation(etf_list,'week',ASSR,download_dir='ASSR_week',delta_t=1/52)
+ASSR_week_df = ETF_evaluation(etf_list,'week',ASSR,download_dir='ASSR_week',has_download=has_download,delta_t=1/52)
 print('ASSR week',ASSR_week_df.head(20),sep='\n')
 
 
-Omega_month_df = ETF_evaluation(etf_list, 'month', Sharpe_Omega, download_dir='Omega_month')
+Omega_month_df = ETF_evaluation(etf_list, 'month', Sharpe_Omega, download_dir='Omega_month',has_download=has_download)
 print('Omega month',Omega_month_df.head(20),sep='\n')
 
 
-Omega_week_df = ETF_evaluation(etf_list, 'week', Sharpe_Omega,download_dir='Omega_week')
+Omega_week_df = ETF_evaluation(etf_list, 'week', Sharpe_Omega,download_dir='Omega_week',has_download=has_download)
 print('Omega week',Omega_week_df.head(20),sep='\n')
 
 
-riskiness_month_df = ETF_evaluation(etf_list, 'month', riskiness, download_dir='riskiness_month')
+riskiness_month_df = ETF_evaluation(etf_list, 'month', riskiness, download_dir='riskiness_month',has_download=has_download)
 print('riskiness month',riskiness_month_df.head(20),sep='\n')
 
 
-riskiness_week_df = ETF_evaluation(etf_list, 'week', riskiness,download_dir='riskiness_week')
+riskiness_week_df = ETF_evaluation(etf_list, 'week', riskiness,download_dir='riskiness_week',has_download=has_download)
 print('riskiness week',riskiness_week_df.head(20),sep='\n')
