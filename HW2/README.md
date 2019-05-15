@@ -7,8 +7,10 @@
 
 ## 2. 得出co-occurrence matrix ([co-occurrence_matrix.ipynb](https://github.com/joe0123/Fintech-Text_Mining_and_Machine_Learning/blob/master/HW2/co-occurrence_matrix.ipynb))
 (以下以風險等級四為例，將4換成5便可求得風險等級5的資料)  
-1. 讀取`client_vec_4.csv`，算出co-occurrence matrix，將結果存至`co-occurrence matrix.csv`
+1. 讀取`client_vec_4.csv`，算出co-occurrence matrix，將結果存至`co-occurrence matrix.csv`。  
+<font color=red>其中，(i, j)代表在i出現的前提下，j也出現的機率為和。</font>
 2. 得到熱點圖  
+
 
 #### rank4:  
 ![](https://github.com/joe0123/Fintech-Text_Mining_and_Machine_Learning/blob/master/HW2/heatmap_output_4.png)
@@ -17,7 +19,8 @@
 
 ## 3. 畫出共現圖 `python co-occurrence_graph.py co-occurrence_matrix_4.csv co-occurrence_matrix_diag_4.csv`
 (以下以風險等級四為例，將4換成5便可求得風險等級5的資料)  
-讀取`co-occurrence_matrix_4.csv`，畫出共現圖  
+1. 讀取`co-occurrence_matrix_4.csv`，畫出共現圖。  
+<font color=red>其中，i->j代表matrix中的(i, j)。</font>
 #### rank4:  
 ![](https://github.com/joe0123/Fintech-Text_Mining_and_Machine_Learning/blob/master/HW2/graph_4.png)
 #### rank5:  
@@ -48,7 +51,7 @@
 #### rank5 co-occurrence subgraph:(表示這些edge在matrix_5比在matrix_4還顯著)  
 ![](https://github.com/joe0123/Fintech-Text_Mining_and_Machine_Learning/blob/master/HW2/graph_diff5.png)
 
-## 6. 挑出subgraph中所有與年收入相關的edge
+## 6. 挑出subgraph中 以年收入相關為前提的edge(即 "...年收入..." -> "...")
 (以下以風險等級四為例，將4換成5便可求得風險等級5的資料)  
 1. 在改動co-occurrence_graph.py的spec_node設為\[i for i in df_comatrix.index.values if i.find("年收入") != -1\]之後，執行`python co-occurrence_graph.py co-occurrence_matrix_4.csv co-occurrence_matrix_diag_4.csv diff_matrix_45.csv`畫出subgraph  
 
