@@ -20,19 +20,8 @@ def ASSR(table, r, delta_t):
 
 def Sharpe_Omega(table, r, delta_t):
 	r *= delta_t
-	return (np.mean(table[table >= r], axis=0) - r) / (r - np.mean(table[table <= r], axis=0)) - 1
+	return (np.mean(table[table >= r], axis=0) - r) / (r - np.mean(table[table <= r], axis=0))
 	
-	'''
-	omega = []
-	for t in table.T:
-		hist, bins = np.histogram(t, bins=np.arange(np.min(t), np.max(t) + 1e-3,1e-3),density=True)
-		interval=np.diff(bins)
-		pdf=hist*interval
-		cdf=np.cumsum(pdf)
-		index=np.searchsorted(bins,r)-1
-		omega.append((np.max(t) - r - np.sum(interval[index:] * cdf[index:])) / np.sum(interval[:index] * cdf[:index]))
-		
-	return np.array(omega)-1'''
 
 def riskiness(table, r, delta_t):
 	def f1(x, *args):
