@@ -32,17 +32,19 @@ def Sharpe_Omega(table, r):
 
 def riskiness(table, r):
 	def f1(x, *args):
-		return np.sum(np.exp(-args[0] * x)) - args[0].size
-	
+		return np.mean(np.exp(-args[0]*x)) - 1
+	table=table.astype(np.float128)
 	Q = []
 	table -= r
 	for t in table.T:
-		guess = 10
-		while guess < 1e6:
-			ag = fsolve(f1, guess, args=(t))[0]
+		guess = -125.0
+		while True:
+			ag = fsolve(f1, guess, args=(t),maxfev=10000)[0]
+			#print(ag,type(ag))
 			if ag != guess:
 				break
-			guess *= 10
+			guess -= 10
+		print(ag, f1(ag,t))
 		Q.append(np.exp(-ag))
 	return np.array(Q)
 
@@ -72,20 +74,20 @@ etf_list = df["Symbol"][df['Inception'] <= '%d/%d/%d' % (date.year-3, date.month
 #print(etf_list)
 has_download = True
 
-ASSR_month_df=ETF_evaluation(etf_list,'month',ASSR, download_dir='ASSR_month',has_download=has_download,delta_t=1/12)
-print('ASSR month',ASSR_month_df.head(20),sep='\n')
+#ASSR_month_df=ETF_evaluation(etf_list,'month',ASSR, download_dir='ASSR_month',has_download=has_download,delta_t=1/12)
+#print('ASSR month',ASSR_month_df.head(20),sep='\n')
 
 
-ASSR_week_df = ETF_evaluation(etf_list,'week',ASSR,download_dir='ASSR_week',has_download=has_download,delta_t=1/52)
-print('ASSR week',ASSR_week_df.head(20),sep='\n')
+#ASSR_week_df = ETF_evaluation(etf_list,'week',ASSR,download_dir='ASSR_week',has_download=has_download,delta_t=1/52)
+#print('ASSR week',ASSR_week_df.head(20),sep='\n')
 
 
-Omega_month_df = ETF_evaluation(etf_list, 'month', Sharpe_Omega, download_dir='Omega_month',has_download=has_download)
-print('Omega month',Omega_month_df.head(20),sep='\n')
+#Omega_month_df = ETF_evaluation(etf_list, 'month', Sharpe_Omega, download_dir='Omega_month',has_download=has_download)
+#print('Omega month',Omega_month_df.head(20),sep='\n')
 
 
-Omega_week_df = ETF_evaluation(etf_list, 'week', Sharpe_Omega,download_dir='Omega_week',has_download=has_download)
-print('Omega week',Omega_week_df.head(20),sep='\n')
+#Omega_week_df = ETF_evaluation(etf_list, 'week', Sharpe_Omega,download_dir='Omega_week',has_download=has_download)
+#print('Omega week',Omega_week_df.head(20),sep='\n')
 
 
 riskiness_month_df = ETF_evaluation(etf_list, 'month', riskiness, download_dir='riskiness_month',has_download=has_download)
