@@ -20,7 +20,8 @@ def ASSR(table, r, delta_t):
 
 def Sharpe_Omega(table, r, delta_t):
 	r *= delta_t
-	return (np.mean(table[table >= r], axis=0) - r) / (r - np.mean(table[table <= r], axis=0))
+	return (np.sum(table, axis=0)-r) / (np.sum(r-table[table <= r], axis=0))
+	#return (np.sum(table[table >= r]-r, axis=0)) / (np.sum(r-table[table <= r], axis=0))-1
 	
 
 def riskiness(table, r, delta_t):
@@ -72,25 +73,29 @@ if __name__ == "__main__":
 	else:
 		has_download = False
 
-	ASSR_month_df=ETF_evaluation(etf_list,'month',ASSR, download_dir='ASSR_month',has_download=has_download)
-	print('ASSR month',ASSR_month_df.head(20),sep='\n')
+	ASSR_month_df=ETF_evaluation(etf_list,'month',ASSR, download_dir='tmp_month',has_download=has_download)
+	#print('ASSR month',ASSR_month_df.head(20),sep='\n')
 
 
-	ASSR_week_df = ETF_evaluation(etf_list,'week',ASSR,download_dir='ASSR_week',has_download=has_download)
-	print('ASSR week',ASSR_week_df.head(20),sep='\n')
+	ASSR_week_df = ETF_evaluation(etf_list,'week',ASSR,download_dir='tmp_week',has_download=has_download)
+	#print('ASSR week',ASSR_week_df.head(20),sep='\n')
 
 
-	Omega_month_df = ETF_evaluation(etf_list, 'month', Sharpe_Omega, download_dir='Omega_month',has_download=has_download)
-	print('Omega month',Omega_month_df.head(20),sep='\n')
+	Omega_month_df = ETF_evaluation(etf_list, 'month', Sharpe_Omega, download_dir='tmp_month',has_download=True)
+	#print('Omega month',Omega_month_df.head(20),sep='\n')
 
 
-	Omega_week_df = ETF_evaluation(etf_list, 'week', Sharpe_Omega,download_dir='Omega_week',has_download=has_download)
-	print('Omega week',Omega_week_df.head(20),sep='\n')
+	Omega_week_df = ETF_evaluation(etf_list, 'week', Sharpe_Omega,download_dir='tmp_week',has_download=True)
+	#print('Omega week',Omega_week_df.head(20),sep='\n')
 
 
-	riskiness_month_df = ETF_evaluation(etf_list, 'month', riskiness, download_dir='riskiness_month',has_download=has_download)
-	print('riskiness month',riskiness_month_df.head(20),sep='\n')
+	riskiness_month_df = ETF_evaluation(etf_list, 'month', riskiness, download_dir='tmp_month',has_download=True)
+	#print('riskiness month',riskiness_month_df.head(20),sep='\n')
 
 
-	riskiness_week_df = ETF_evaluation(etf_list, 'week', riskiness,download_dir='riskiness_week',has_download=has_download)
-	print('riskiness week',riskiness_week_df.head(20),sep='\n')
+	riskiness_week_df = ETF_evaluation(etf_list, 'week', riskiness,download_dir='tmp_week',has_download=True)
+	#print('riskiness week',riskiness_week_df.head(20),sep='\n')
+
+	whole = pd.concat((ASSR_month_df, ASSR_week_df, Omega_month_df, Omega_week_df, riskiness_month_df, riskiness_week_df), axis=1)
+	whole.columns = ['ASSR_month', 'ASSR_week', 'Omega_month', 'Omega_week', 'riskiness_month', 'riskiness_week']
+	print(whole.head(20).to_string())
