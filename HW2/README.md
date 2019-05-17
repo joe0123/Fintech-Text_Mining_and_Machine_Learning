@@ -17,16 +17,16 @@
 #### rank5:
 ![](https://github.com/joe0123/Fintech-Text_Mining_and_Machine_Learning/blob/master/HW2/heatmap_output_5.png)
 
-## 3. 畫出共現圖 `python co-occurrence_graph.py co-occurrence_matrix_4.csv co-occurrence_matrix_diag_4.csv`
+## 3. 畫出共現圖
 (以下以風險等級四為例，將4換成5便可求得風險等級5的資料)  
-1. 讀取`co-occurrence_matrix_4.csv`，畫出共現圖。  
+1. 執行`python co-occurrence_graph.py -r 4`，讀取`co-occurrence_matrix_4.csv`畫出共現圖。  
 <font color=red>其中，i->j代表matrix中的(i, j)。</font>
 #### rank4:  
 ![](https://github.com/joe0123/Fintech-Text_Mining_and_Machine_Learning/blob/master/HW2/graph_4.png)
 #### rank5:  
 ![](https://github.com/joe0123/Fintech-Text_Mining_and_Machine_Learning/blob/master/HW2/graph_5.png)
 
-## 4. 篩出co-occurrence matrix中value較高的edge 
+## 4. 篩出co-occurrence matrix中value較高的edge   
 (以下以風險等級四為例，將4換成5便可求得風險等級5的資料)  
 1. 執行`python histogram_percentage.py co-occurrence_matrix_4.csv`畫出所有共現值的histogram，選出0.6作為threshold(該處比例的變化較穩定)。  
 2. 執行`python co-occurrence_graph.py co-occurrence_matrix_4.csv co-occurrence_matrix_diag_4.csv`畫出subgraph  
