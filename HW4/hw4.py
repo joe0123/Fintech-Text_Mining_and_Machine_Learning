@@ -20,8 +20,7 @@ def ASSR(table, r, delta_t):
 
 def Sharpe_Omega(table, r, delta_t):
 	r *= delta_t
-	return (np.sum(table, axis=0)-r) / (np.sum(r-table[table <= r], axis=0))
-	#return (np.sum(table[table >= r]-r, axis=0)) / (np.sum(r-table[table <= r], axis=0))-1
+	return (np.sum(table, axis=0)-table.shape[0]*r) / (np.sum(r-table[table <= r], axis=0))
 	
 
 def riskiness(table, r, delta_t):
