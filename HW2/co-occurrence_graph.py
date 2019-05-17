@@ -30,6 +30,8 @@ for i in range(1, len(sys.argv), 2):
         #print(sys.argv[i], cmd_dict[sys.argv[i]])
     else:
         usage_error()
+if cmd_list["-r"] == "":
+    usage_error()
 
 df_comatrix = pd.read_csv("co-occurrence_matrix_"+cmd_dict["-r"]+".csv", index_col="label_headers", encoding="utf-8")
 df_freq = pd.read_csv("co-occurrence_matrix_diag_"+cmd_dict["-r"]+".csv", index_col="label_headers", encoding="utf-8")
@@ -39,8 +41,7 @@ spec_nodes = [i for i in df_comatrix.index.values if i.find(cmd_dict["-k"]) != -
 G = nx.DiGraph()
 for i in spec_nodes:
     for j in df_comatrix.columns.values:
-#condition
-        if i != j and df_comatrix.ix[i, j] >= float(cmd_dict["-t"]):
+        if i != j and df_comatrix.ix[i, j] > float(cmd_dict["-t"]):
             G.add_edge(i, j)
 
 if cmd_dict["-d"] != "":
@@ -49,13 +50,13 @@ if cmd_dict["-d"] != "":
     if cmd_dict["-d"].find(cmd_dict["-r"]) == 0:
         for i in spec_nodes:
             for j in G.nodes:
-                if i != j and df_diffmatrix.ix[i, j] >= float(cmd_dict["-dt"]):
+                if i != j and df_diffmatrix.ix[i, j] > float(cmd_dict["-dt"]):
                     sub_edge.append((i, j))
                     #print(i, j, df_comatrix.ix[i, j])
     else:
         for i in spec_nodes:
             for j in G.nodes:
-                if i != j and df_diffmatrix.ix[i, j] <= float(cmd_dict["-dt"]):
+                if i != j and df_diffmatrix.ix[i, j] < float(cmd_dict["-dt"]):
                     sub_edge.append((i, j))
                     #print(i, j, df_comatrix.ix[i, j])
     H = G.edge_subgraph(sub_edge)
