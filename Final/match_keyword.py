@@ -33,13 +33,14 @@ class crawl_name():
 
 class match():
     def __init__(self, del_set):
+    #initialization for local_set{str:set(str)}
         self.local_list = list()
         fr = open("local_nm.txt", "r", encoding="utf-8")
         for line in fr.readlines():
             self.local_list.append(line.strip())
         fr.close()
         self.local_set = {i:(set(i.replace("臺", "台")) - del_set) for i in self.local_list}
-
+    #initialization for remote_set{str:set(str)}
         try:
             self.remote_list = list()
             fr = open("remote_nm.txt", "r", encoding="utf-8")
