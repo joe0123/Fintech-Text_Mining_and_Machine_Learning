@@ -32,9 +32,9 @@ class crawl_name():
         return self.nmlist
 
 class match():
-    def __init__(self, local_nm, del_set):
+    def __init__(self, del_set):
         self.local_list = list()
-        fr = open(local_nm, "r", encoding="utf-8")
+        fr = open("local_nm.txt", "r", encoding="utf-8")
         for line in fr.readlines():
             self.local_list.append(line.strip())
         fr.close()
@@ -58,12 +58,12 @@ class match():
                 ratio = len(iv & jv) / len(iv | jv) 
                 if ratio >= fit[-1][2]:
                     fit[-1][1:] = [jk, ratio]
-                    #fit[-1] = [iv, jv, ratio]
                 if ratio == 1:
                     break
         fit.insert(0, ["local", "remote", "ratio"])
-        with open("match1.csv", "w", encoding="utf-8", newline='') as fw:
+        with open("match.csv", "w", encoding="utf-8", newline='') as fw:
             fcsv = csv.writer(fw)
             fcsv.writerows(fit)
 
-match("local_nm.txt", set("野村基金類型-之 ?()計價類")).compare_set()
+if __name__ == '__main__':
+    match(set("野村基金類型-之 ?()計價類")).compare_set()
