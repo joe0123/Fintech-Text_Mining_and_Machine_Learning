@@ -11,8 +11,8 @@ class crawl_name():
         options.add_argument("user-agent={}".format('Googlebot/2.1 (+http://www.google.com/bot.html)'))
         #reference# https://developer.mozilla.org/zh-TW/docs/Web/HTTP/Headers/User-Agent
         self.driver = webdriver.Chrome(chrome_options=options)
-    #initialization for name list
-        self.nmlist = []
+    #initialization for name dict{name:page}
+        self.nmdict = {}
 
     def __del__(self):
         self.driver.close()
@@ -24,14 +24,11 @@ class crawl_name():
             if not names:
                 break
             else:
-                self.nmlist += [i.text for i in names]
+                self.nmdict = {**self.nmdict, **dict.fromkeys([i.text for i in names], page)}
                 page += 1
-        fw = open("remote_nm.txt", "a", encoding="utf-8")
-        fw.writelines([i+"\n" for i in self.nmlist])
-        fw.close()
-        return self.nmlist
+        return self.nmdict
 
-class match():
+class match_word():
     def __init__(self, del_set):
     #initialization for local_set{str:set(str)}
         self.local_list = list()
@@ -45,10 +42,14 @@ class match():
             self.remote_list = list()
             fr = open("remote_nm.txt", "r", encoding="utf-8")
             for line in fr.readlines():
-                self.remote_list.append(line.strip())
+                self.remote_list.append(" ".join(line.strip().split(" ")[:-1]))
             fr.close()
         except:
-            self.remote_list = crawl_name().get_name()
+            self.remote_dict = crawl_name().get_name()
+            fw = open("remote_nm.txt", "a", encoding="utf-8")
+            fw.writelines([i+","+str(j)+"\n" for i ,j in self.remote_dict.items()])
+            fw.close()
+            self.remote_list = self.remote_dict.keys()
         self.remote_set = {i:(set(i.replace("臺", "台")) - del_set) for i in self.remote_list}
 
     def compare_set(self):
@@ -66,5 +67,6 @@ class match():
             fcsv = csv.writer(fw)
             fcsv.writerows(fit)
 
+
 if __name__ == '__main__':
-    match(set("野村基金類型-之 ?()計價類")).compare_set()
+    match_word(set("野村基金類型-之 ?()計價類")).compare_set()
