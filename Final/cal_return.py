@@ -56,7 +56,9 @@ def get_return(buy_data,net_value, compared_fund):
 	return {p: np.ma.average([tup[0] for tup in people[p]], axis=0, weights=[tup[1] for tup in people[p]]).filled(0) for p in people}, \
 		specific_fund_return
 	
-	
+
+matplotlib.rcParams['axes.unicode_minus'] = False
+
 # init net_value
 net_value = pd.read_csv('net_value.csv', encoding='utf-8')
 net_value.index = net_value['local']
@@ -64,30 +66,24 @@ net_value = net_value.drop('local',axis=1).to_dict('index')
 net_value = {n: np.array(list(net_value[n].values())) for n in net_value}
 
 buy_data_dict = pd.read_excel('pure_buy_data.xlsx', sheet_name=None)
-ave_return_and_currency_return = {sheet_name: get_return(buy_data_dict[sheet_name], net_value, '野村貨幣市場基金' if sheet_name[1] == '4' else '野村中國機會基金') for sheet_name in buy_data_dict}
-ave_return = {sheet_name: ave_return_and_currency_return[sheet_name][0] for sheet_name in ave_return_and_currency_return}
-currency_return = {sheet_name: ave_return_and_currency_return[sheet_name][1] for sheet_name in ave_return_and_currency_return}
 
-#print(list(ave_return['R5-1交易'].values())[5:10])
-
+'''
+cum_opt = {'A01': 24, 'A02': 31, 'A04': 36, 'A05': 39, 'A08': 46, 'A09': 55, 'A10': 60, 'A11': 65, 'A12': 68,
+ 'A14': 71, 'B01': 76, 'B02': 81, 'B03': 86, 'B04': 91, 'B05': 96, 'B06': 101, 'B07': 106}'''
 client_vec_4 = pd.read_csv('client_vec_4.csv', encoding='utf-8')
 client_vec_4 = dict(zip(client_vec_4['客戶ID'], client_vec_4.iloc[:, 1:].values))
 client_vec_5 = pd.read_csv('client_vec_5.csv', encoding='utf-8')
 client_vec_5 = dict(zip(client_vec_5['客戶ID'], client_vec_5.iloc[:, 1:].values))
 
-'''
-cum_opt = {'A01': 24, 'A02': 31, 'A04': 36, 'A05': 39, 'A08': 46, 'A09': 55, 'A10': 60, 'A11': 65, 'A12': 68,
- 'A14': 71, 'B01': 76, 'B02': 81, 'B03': 86, 'B04': 91, 'B05': 96, 'B06': 101, 'B07': 106}'''
+for sheet_name, sheet in buy_data_dict.items():
+	ave_return, currency_return = get_return(sheet, net_value, '野村貨幣市場基金' if sheet_name[1] == '4' else '野村中國機會基金')
+	expected_return = {p: [0.015, 0.04, 0.07, 0.105, 0.12][np.argmax(client_vec_4[p][96:101] if sheet_name[1]=='4' else client_vec_5[p][96:101])] for p in ave_return}
+	expected_loss = {p: [-0.015, -0.04, -0.07, -0.105, -0.12][np.argmax(client_vec_4[p][101:106] if sheet_name[1] == '4' else client_vec_5[p][96:101])] for p in ave_return}
+	
+	return_diff = np.array([returns[-1] - expected_return[p] for p, returns in ave_return.items()])
+	loss_diff = np.array([np.min(returns) - expected_loss[p] for p, returns in ave_return.items()])
+	currency_diff = np.array([currency_return[p][-1] - exp_return for p, exp_return in expected_return.items()])
 
-expected_return = {sheet_name: {p: [0.015, 0.04, 0.07, 0.105, 0.12][np.argmax(client_vec_4[p][96:101] if sheet_name[1]=='4' else client_vec_5[p][96:101])] for p in ave_return[sheet_name].keys()} for sheet_name in ave_return}
-expected_loss={sheet_name: {p: [-0.015, -0.04, -0.07, -0.105, -0.12][np.argmax(client_vec_4[p][101:106] if sheet_name[1]=='4' else client_vec_5[p][96:101])] for p in ave_return[sheet_name].keys()} for sheet_name in ave_return}
-
-return_diff = {sheet_name: np.array([sheet[p][-1] - expected_return[sheet_name][p] for p in sheet]) for sheet_name,sheet in ave_return.items()}
-loss_diff = {sheet_name: np.array([np.min(sheet[p]) - expected_loss[sheet_name][p] for p in sheet]) for sheet_name,sheet in ave_return.items()}
-currency_diff = {sheet_name: np.array([currency_return[sheet_name][p][-1] - sheet[p] for p in sheet]) for sheet_name,sheet in expected_return.items()}
-
-matplotlib.rcParams['axes.unicode_minus'] = False
-
-for sheet_name in ave_return.keys():
-	plt.boxplot([return_diff[sheet_name],loss_diff[sheet_name],currency_diff[sheet_name]],labels=['return','loss','currency' if sheet_name[1]=='4' else 'new market'])
+	plt.boxplot([return_diff,loss_diff,currency_diff],labels=['return','loss','currency' if sheet_name[1]=='4' else 'new market'])
 	draw(sheet_name, savefig=sheet_name+'.jpg')
+
