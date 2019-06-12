@@ -84,10 +84,10 @@ expected_loss={sheet_name: {p: [-0.015, -0.04, -0.07, -0.105, -0.12][np.argmax(c
 
 return_diff = {sheet_name: np.array([sheet[p][-1] - expected_return[sheet_name][p] for p in sheet]) for sheet_name,sheet in ave_return.items()}
 loss_diff = {sheet_name: np.array([np.min(sheet[p]) - expected_loss[sheet_name][p] for p in sheet]) for sheet_name,sheet in ave_return.items()}
-currency_diff = {sheet_name: np.array([sheet[p][-1] - currency_return[sheet_name][p][-1] for p in sheet]) for sheet_name,sheet in ave_return.items()}
+currency_diff = {sheet_name: np.array([currency_return[sheet_name][p][-1] - sheet[p] for p in sheet]) for sheet_name,sheet in expected_return.items()}
 
 matplotlib.rcParams['axes.unicode_minus'] = False
 
 for sheet_name in ave_return.keys():
-	plt.boxplot([return_diff[sheet_name],loss_diff[sheet_name],currency_diff[sheet_name]],labels=['return','loss','currency'])
-	draw(sheet_name)
+	plt.boxplot([return_diff[sheet_name],loss_diff[sheet_name],currency_diff[sheet_name]],labels=['return','loss','currency' if sheet_name[1]=='4' else 'new market'])
+	draw(sheet_name, savefig=sheet_name+'.jpg')
